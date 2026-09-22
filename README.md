@@ -1,4 +1,4 @@
-# Módulo 4 — Herramienta de prototipado: Emergent
+# Herramienta de prototipado: Emergent
 
 ---
 
