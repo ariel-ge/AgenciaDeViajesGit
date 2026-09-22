@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Concierge — Viajes a tu medida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#FAF7F2; --ink:#1A1A1A; --gold:#B08D57; --gold-2:#C9A96A;
+  --muted:#7A746C; --line:#E8E2D8; --card:#FFFFFF;
+  --shadow:0 20px 60px rgba(26,26,26,.08);
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--ivory);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif}
+img{display:block;max-width:100%}
+.container{width:min(1180px,92%);margin:0 auto}
+button{font-family:'Inter',sans-serif;cursor:pointer}
+.eyebrow{letter-spacing:.28em;text-transform:uppercase;font-size:.72rem;font-weight:600;color:var(--gold)}
+.muted{color:var(--muted)}
+
+/* ---------- NAV ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .35s,box-shadow .35s}
+nav.scrolled{background:rgba(250,247,242,.92);backdrop-filter:blur(12px);box-shadow:0 2px 20px rgba(0,0,0,.06)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0}
+.logo{display:flex;align-items:center;gap:.6rem;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;text-decoration:none;color:var(--ink)}
+.logo-mark{width:34px;height:34px;border:1.5px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold);font-size:.95rem}
+.nav-links{display:flex;gap:2rem;font-size:.85rem}
+.nav-links a{text-decoration:none;color:var(--ink);font-weight:500;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--gold);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+@media(max-width:720px){.nav-links{display:none}}
+
+/* ---------- HERO ---------- */
+.hero{min-height:92vh;display:flex;align-items:flex-end;position:relative;color:#fff;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2000&auto=format&fit=crop') center/cover;transform:scale(1.05);animation:kenburns 22s ease-in-out infinite alternate}
+@keyframes kenburns{from{transform:scale(1.05)}to{transform:scale(1.16)}}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,12,.25) 0%,rgba(10,10,12,.15) 40%,rgba(10,10,12,.75) 100%)}
+.hero-content{position:relative;z-index:2;padding-bottom:5.5rem;width:100%}
+.hero h1{font-size:clamp(2.6rem,6.5vw,5rem);line-height:1.08;font-weight:500;max-width:14ch}
+.hero h1 em{color:var(--gold-2)}
+.hero p.lead{max-width:46ch;margin-top:1.2rem;font-weight:300;font-size:1.05rem;color:#EDE8DF}
+.reveal{opacity:0;transform:translateY(26px);animation:rise .9s cubic-bezier(.22,.8,.3,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.d1{animation-delay:.15s}.d2{animation-delay:.35s}.d3{animation-delay:.55s}
+.scroll-cue{position:absolute;bottom:1.4rem;left:50%;transform:translateX(-50%);z-index:2;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:#D8D2C6;animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+/* ---------- FORM ---------- */
+section{padding:5.5rem 0}
+.planner{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:2.6rem;margin-top:-9.5rem;position:relative;z-index:10;border:1px solid var(--line)}
+.planner-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1.2rem 1.4rem;margin-top:1.6rem}
+.field{display:flex;flex-direction:column;gap:.4rem}
+.field.span2{grid-column:span 2}.field.span3{grid-column:span 3}
+.field label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.field input,.field select{padding:.85rem 1rem;border:1px solid var(--line);border-radius:10px;background:var(--ivory);font-family:'Inter',sans-serif;font-size:.95rem;color:var(--ink);transition:border .25s,box-shadow .25s;outline:none;width:100%}
+.field input:focus,.field select:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(176,141,87,.12)}
+input[type=date]{color-scheme:light}
+.chips{display:flex;flex-wrap:wrap;gap:.55rem}
+.chip{padding:.55rem 1.05rem;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:.85rem;font-weight:500;color:var(--muted);transition:all .25s}
+.chip:hover{border-color:var(--gold);color:var(--ink)}
+.chip.active{background:var(--ink);color:var(--ivory);border-color:var(--ink)}
+.range-row{display:flex;align-items:center;gap:1rem}
+input[type=range]{flex:1;accent-color:var(--gold)}
+.budget-val{font-family:'Playfair Display',serif;font-size:1.25rem;min-width:8.5ch;text-align:right;color:var(--gold);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:1rem 2.2rem;border-radius:999px;border:none;font-size:.9rem;font-weight:600;letter-spacing:.05em;transition:transform .25s,box-shadow .25s,background .25s}
+.btn-dark{background:var(--ink);color:var(--ivory)}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(26,26,26,.25)}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(176,141,87,.35)}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--ink)}
+@media(max-width:960px){
+  .planner{padding:1.8rem}
+  .planner-grid{grid-template-columns:repeat(2,1fr)}
+  .field.span2,.field.span3{grid-column:span 2}
+}
+@media(max-width:520px){.planner-grid{grid-template-columns:1fr}.field.span2,.field.span3{grid-column:span 1}}
+
+/* ---------- SECTION HEADERS ---------- */
+.sec-head{max-width:620px;margin-bottom:2.6rem}
+.sec-head h2{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:500;margin-top:.5rem}
+.sec-head p{margin-top:.6rem;color:var(--muted)}
+
+/* ---------- GALLERY ---------- */
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
+.g-item{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:3/4;cursor:pointer}
+.g-item img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.22,.8,.3,1)}
+.g-item:hover img{transform:scale(1.07)}
+.g-item .g-label{position:absolute;left:0;right:0;bottom:0;padding:1.4rem 1.2rem;background:linear-gradient(transparent,rgba(10,10,12,.75));color:#fff}
+.g-label h3{font-size:1.25rem;font-weight:500}
+.g-label span{font-size:.78rem;color:#D9D2C5}
+@media(max-width:760px){.gallery{grid-template-columns:1fr;}.g-item{aspect-ratio:16/10}}
+
+/* ---------- TRIP CARDS ---------- */
+.trip-meta{display:flex;flex-wrap:wrap;gap:1.4rem;margin-bottom:2.2rem;align-items:center}
+.trip-meta .tag{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:.45rem 1.1rem;font-size:.82rem;font-weight:500}
+.tier-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;align-items:start}
+.tier-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:transform .35s,box-shadow .35s;position:relative}
+.tier-card:hover{transform:translateY(-8px);box-shadow:var(--shadow)}
+.tier-card.featured{border-color:var(--gold);box-shadow:0 18px 50px rgba(176,141,87,.18)}
+.tier-card.featured:hover{box-shadow:0 26px 60px rgba(176,141,87,.28)}
+.badge{position:absolute;top:14px;left:14px;z-index:3;background:var(--gold);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.4rem .9rem;border-radius:999px}
+.tier-img{height:190px;overflow:hidden}
+.tier-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s}
+.tier-card:hover .tier-img img{transform:scale(1.08)}
+.tier-body{padding:1.6rem;display:flex;flex-direction:column;gap:1.1rem;flex:1}
+.tier-body h3{font-size:1.45rem;font-weight:600}
+.tier-body h3 small{display:block;font-family:'Inter',sans-serif;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:.3rem}
+.tier-item{display:flex;gap:.8rem;font-size:.88rem}
+.tier-item svg{flex:none;margin-top:.2rem}
+.tier-item b{display:block;font-weight:600;font-size:.86rem}
+.tier-item span{color:var(--muted);font-size:.82rem}
+.tier-price{margin-top:auto;padding-top:1.1rem;border-top:1px dashed var(--line);display:flex;align-items:flex-end;justify-content:space-between}
+.tier-price .amount{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:600}
+.tier-price .per{font-size:.75rem;color:var(--muted)}
+.fits{font-size:.72rem;font-weight:600;padding:.3rem .7rem;border-radius:999px;margin-top:.35rem;display:inline-block}
+.fits.ok{background:#E7F4EC;color:#2E7D4F}
+.fits.over{background:#FBECEC;color:#B23A3A}
+@media(max-width:980px){.tier-row{grid-template-columns:1fr}}
+
+/* ---------- ITINERARY ---------- */
+.itin-layout{display:grid;grid-template-columns:1.7fr 1fr;gap:2.4rem;align-items:start}
+@media(max-width:980px){.itin-layout{grid-template-columns:1fr}}
+.day{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.6rem 1.8rem;margin-bottom:1.2rem}
+.day h3{font-size:1.2rem;margin-bottom:1.1rem;display:flex;justify-content:space-between;align-items:baseline}
+.day h3 span{font-family:'Inter',sans-serif;font-size:.75rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+.stop{display:grid;grid-template-columns:64px 1fr auto;gap:1rem;padding:.7rem 0;border-top:1px solid var(--line);align-items:center}
+.stop:first-of-type{border-top:none}
+.stop .time{font-family:'Playfair Display',serif;font-weight:600;color:var(--gold);font-size:.95rem}
+.stop .what b{font-size:.9rem;font-weight:600;display:block}
+.stop .what span{font-size:.8rem;color:var(--muted)}
+.stop .cost{font-size:.88rem;font-weight:600;white-space:nowrap}
+.day-total{text-align:right;font-size:.82rem;color:var(--muted);margin-top:.6rem}
+.budget-panel{position:sticky;top:96px;background:var(--ink);color:var(--ivory);border-radius:var(--radius);padding:2rem}
+.budget-panel h3{font-size:1.35rem;margin-bottom:.4rem}
+.budget-panel .total{font-family:'Playfair Display',serif;font-size:2.1rem;color:var(--gold-2);margin:.8rem 0 1.4rem}
+.brow{margin-bottom:1rem}
+.brow .blabel{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem}
+.brow .bar{height:7px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+.brow .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--gold-2));width:0;transition:width 1.1s cubic-bezier(.22,.8,.3,1)}
+.budget-panel .note{font-size:.78rem;color:#A8A29A;border-top:1px solid rgba(255,255,255,.15);margin-top:1.4rem;padding-top:1rem}
+.backlink{display:inline-flex;align-items:center;gap:.45rem;background:none;border:none;color:var(--muted);font-size:.85rem;font-weight:600;margin-bottom:1.4rem;padding:0}
+.backlink:hover{color:var(--ink)}
+.fade-up{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.22,.8,.3,1),transform .7s cubic-bezier(.22,.8,.3,1)}
+.fade-up.in{opacity:1;transform:none}
+
+/* footer */
+footer{background:var(--ink);color:#8F897F;padding:3rem 0;font-size:.82rem}
+footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+footer b{color:var(--ivory);font-family:'Playfair Display',serif;font-weight:500;font-size:1.05rem}
+
+.view{display:none}.view.active{display:block}
+.toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);background:var(--ink);color:#fff;padding:.85rem 1.6rem;border-radius:999px;font-size:.85rem;z-index:99;transition:transform .45s cubic-bezier(.22,.8,.3,1)}
+.toast.show{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="#"><span class="logo-mark">✦</span>Travel Concierge</a>
+    <div class="nav-links">
+      <a href="#" onclick="goHome(event)">Inicio</a>
+      <a href="#gallery" onclick="goHome(event,'gallery')">Destinos</a>
+      <a href="#planner" onclick="goHome(event,'planner')">Planear viaje</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ VISTA: INICIO ============ -->
+<div class="view active" id="view-home">
+  <header class="hero">
+    <div class="hero-bg"></div><div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <p class="eyebrow reveal d1">Concierge digital · Est. 2026</p>
+      <h1 class="reveal d2">Tu viaje perfecto, <em>diseñado a tu medida</em></h1>
+      <p class="lead reveal d3">Cuéntanos tu destino, fechas, presupuesto y estilo. Nuestro concierge digital crea tres propuestas únicas — de la opción inteligente a la experiencia premium — con itinerario día por día.</p>
+    </div>
+    <div class="scroll-cue">Desliza</div>
+  </header>
+
+  <section id="planner" style="padding-top:0">
+    <div class="container">
+      <div class="planner reveal">
+        <p class="eyebrow">Empezar</p>
+        <h2 style="font-size:1.7rem;font-weight:600;margin-top:.4rem">Diseña tu viaje en 30 segundos</h2>
+        <div class="planner-grid">
+          <div class="field span2">
+            <label>Origen</label>
+            <input id="f-origin" type="text" value="Ciudad de México" placeholder="Ciudad de México">
+          </div>
+          <div class="field span2">
+            <label>Destino</label>
+            <input id="f-dest" type="text" value="París" placeholder="París, Tokio, Nueva York…">
+          </div>
+          <div class="field">
+            <label>Personas</label>
+            <input id="f-people" type="number" min="1" max="12" value="3">
+          </div>
+          <div class="field span2">
+            <label>Fecha de ida</label>
+            <input id="f-start" type="date" value="2026-11-12">
+          </div>
+          <div class="field span2">
+            <label>Fecha de regreso</label>
+            <input id="f-end" type="date" value="2026-11-17">
+          </div>
+          <div class="field">
+            <label>Noches</label>
+            <input id="f-nights" type="text" value="5 noches" readonly style="background:#fff">
+          </div>
+          <div class="field span3">
+            <label>Presupuesto total (MXN)</label>
+            <div class="range-row">
+              <input id="f-budget" type="range" min="20000" max="300000" step="1000" value="82375">
+              <span class="budget-val" id="f-budget-val">$82,375</span>
+            </div>
+          </div>
+          <div class="field span3">
+            <label>Tipo de viaje</label>
+            <div class="chips" id="f-type">
+              <button class="chip active" data-type="Cultura">Cultura</button>
+              <button class="chip" data-type="Gastronomía">Gastronomía</button>
+              <button class="chip" data-type="Aventura">Aventura</button>
+              <button class="chip" data-type="Relajación">Relajación</button>
+              <button class="chip" data-type="Lujo">Lujo</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap">
+          <button class="btn btn-dark" onclick="planTrip()">Planear mi viaje →</button>
+          <button class="btn btn-ghost" onclick="loadDemo()">✦ Cargar demo precargada</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" style="padding-top:1rem">
+    <div class="container">
+      <div class="sec-head fade-up">
+        <p class="eyebrow">Inspiración</p>
+        <h2>Destinos que enamoran</h2>
+        <p>Explora algunos de los lugares que nuestros viajeros más solicitan. Toca uno para empezar a planear.</p>
+      </div>
+      <div class="gallery" id="gallery-grid"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div><b>✦ Travel Concierge</b><br>El arte de viajar, digitalizado.</div>
+      <div>Prototipo con datos ficticios · 2026</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============ VISTA: PROPUESTAS ============ -->
+<div class="view" id="view-plans">
+  <section style="padding-top:7rem">
+    <div class="container">
+      <button class="backlink" onclick="goHome(event)">← Modificar preferencias</button>
+      <div class="sec-head">
+        <p class="eyebrow" id="plans-eyebrow">Tres propuestas para ti</p>
+        <h2 id="plans-title">Tu viaje a París</h2>
+        <p id="plans-sub"></p>
+      </div>
+      <div class="trip-meta" id="plans-meta"></div>
+      <div class="tier-row" id="tier-row"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ VISTA: ITINERARIO ============ -->
+<div class="view" id="view-itin">
+  <section style="padding-top:7rem">
+    <div class="container">
+      <button class="backlink" onclick="showView('view-plans')">← Ver todas las opciones</button>
+      <div class="sec-head">
+        <p class="eyebrow" id="itin-eyebrow"></p>
+        <h2 id="itin-title"></h2>
+        <p id="itin-sub"></p>
+      </div>
+      <div class="itin-layout">
+        <div id="itin-days"></div>
+        <aside class="budget-panel">
+          <p class="eyebrow" style="color:var(--gold-2)">Resumen de presupuesto</p>
+          <h3 class="serif">¿En qué se va tu dinero?</h3>
+          <div class="total" id="bud-total"></div>
+          <div id="bud-rows"></div>
+          <p class="note" id="bud-note"></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= DATA (ficticia) ================= */
+const IMG = {
+  paris:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1200&auto=format&fit=crop',
+  tokyo:'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=1200&auto=format&fit=crop',
+  nyc:'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1200&auto=format&fit=crop',
+  hotel:'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop',
+  hotel2:'https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1200&auto=format&fit=crop',
+  hotel3:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop',
+  flight:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1200&auto=format&fit=crop',
+  food:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1200&auto=format&fit=crop',
+  culture:'https://images.unsplash.com/photo-1517840901100-8179e982acb7?q=80&w=1200&auto=format&fit=crop',
+  adventure:'https://images.unsplash.com/photo-1508672019048-805c876b67e2?q=80&w=1200&auto=format&fit=crop',
+  relax:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop'
+};
+
+const DESTINATIONS = {
+  'paris':{
+    name:'París', img:IMG.paris,
+    tiers:{
+      economica:{
+        img:IMG.hotel, hotel:{name:'Hôtel Alizé Montmartre',desc:'Hotel boutique 3★ en Montmartre, desayuno incluido'},
+        flight:{name:'Vuelo con escala',desc:'CDMX → París · Aerolínea económica · 1 escala · ida y vuelta'},
+        activities:['Tour a pie por Montmartre y Sacré-Cœur','Museo del Louvre (entrada general)','Paseo en barco por el Sena','Jardines de Luxemburgo y Saint-Germain'],
+        restaurants:['Bouillon Pigalle (clásico francés)','Crêperie Bretonne','Mercado de Rue Mouffetard'],
+        transport:'Metro de París (carnet semanal)',
+        prices:{flight:9800,hotelPerNight:2400,activity:500,foodPerDay:900,transport:4200}
+      },
+      equilibrada:{
+        img:IMG.hotel2, hotel:{name:'Hôtel Le Marais Rive Gauche',desc:'Hotel 4★ en el Marais · Rooftop y spa'},
+        flight:{name:'Vuelo directo',desc:'CDMX → París · Aerolínea tradicional · equipaje incluido'},
+        activities:['Louvre con acceso prioritario','Torre Eiffel nivel 2 al atardecer','Versalles medio día con guía','Barrio Latino y Catedral de Notre-Dame','Clase de repostería francesa'],
+        restaurants:['Le Comptoir du Relais','Brasserie Lipp','Café de Flore'],
+        transport:'Metro + 2 traslados privados al aeropuerto',
+        prices:{flight:14800,hotelPerNight:4300,activity:950,foodPerDay:1500,transport:7200}
+      },
+      premium:{
+        img:IMG.hotel3, hotel:{name:'The Ritz Paris',desc:'Palacio 5★ frente a Place Vendôme · Mayordomo incluido'},
+        flight:{name:'Business class directo',desc:'CDMX → París · Business · lounge y fast-track'},
+        activities:['Louvre privado antes de la apertura','Cena en la Torre Eiffel (restaurante Jules Verne)','Versalles con acceso VIP y bosque de la reina','Paseo privado en yate por el Sena','Sesión fotográfica profesional en París','Cata de vinos en una bodega centenaria'],
+        restaurants:['L’Ambroisie (3★ Michelin)','Le Meurice Alain Ducasse','Pink Mamma (cena íntima)'],
+        transport:'Chófer privado durante todo el viaje',
+        prices:{flight:39500,hotelPerNight:14500,activity:2600,foodPerDay:3800,transport:18500}
+      }
+    }
+  },
+  'tokio':{
+    name:'Tokio', img:IMG.tokyo,
+    tiers:{
+      economica:{
+        img:IMG.hotel, hotel:{name:'APA Hotel Shinjuku',desc:'Hotel eficiente 3★ en el corazón de Shinjuku'},
+        flight:{name:'Vuelo con escala',desc:'CDMX → Tokio · 1 escala · ida y vuelta'},
+        activities:['Templos Senso-ji y calle Nakamise','Cruce de Shibuya y Hachiko','Parque Ueno y museos','Mercado de Ameya-Yokochō'],
+        restaurants:['Ichiran Ramen','Sushi de cinta en Genki','Konbini gourmet (7-Eleven Japan)'],
+        transport:'JR Pass regional + metro',
+        prices:{flight:15200,hotelPerNight:2800,activity:450,foodPerDay:800,transport:5600}
+      },
+      equilibrada:{
+        img:IMG.hotel2, hotel:{name:'Hotel Niwa Tokyo',desc:'Ryokan moderno 4★ con jardín y onsen interior'},
+        flight:{name:'Vuelo directo',desc:'CDMX → Tokio · aerolínea tradicional · 2 maletas'},
+        activities:['TeamLab Planets y Odaiba','Día en Hakone con tren panorámico','Tsukiji Outer Market tour gastronómico','Santuario Meiji y harajuku','Noche en izakaya de Golden Gai'],
+        restaurants:['Uobei (sushi hi-tech)','Afuri Ramen','Omakase económico en Shibuya'],
+        transport:'JR Pass 7 días + suica',
+        prices:{flight:21500,hotelPerNight:5200,activity:900,foodPerDay:1400,transport:8800}
+      },
+      premium:{
+        img:IMG.hotel3, hotel:{name:'Aman Tokyo',desc:'Santuario urbano 5★ sobre Otemachi · vista al Palacio Imperial'},
+        flight:{name:'Business class directo',desc:'CDMX → Tokio · Business · asientos cama'},
+        activities:['Ceremonia de té privada con maestra','Cena kaiseki con chef con estrella Michelin','Helicóptero sobre el Monte Fuji','Kimono privado y sesión fotográfica en Kioto exprés','Tour de whisky y jazz en Ginza','Spa onsen privado y masaje'],
+        restaurants:['Sukiyabashi Jiro','Ryugin (3★ Michelin)','New York Grill (Lost in Translation)'],
+        transport:'Toyota Alphard con chófer 24/7',
+        prices:{flight:56000,hotelPerNight:21000,activity:3400,foodPerDay:4200,transport:22000}
+      }
+    }
+  },
+  'nueva york':{
+    name:'Nueva York', img:IMG.nyc,
+    tiers:{
+      economica:{
+        img:IMG.hotel, hotel:{name:'The Local NY',desc:'Hotel boutique 3★ en Long Island City, 10 min de Manhattan'},
+        flight:{name:'Vuelo directo económico',desc:'CDMX → JFK · aerolínea low-cost · carry-on'},
+        activities:['High Line y Hudson Yards','Brooklyn Bridge y DUMBO','Museo Met (pago voluntario)','Central Park en bicicleta'],
+        restaurants:['Joe’s Pizza','Los Tacos No.1','Bagels en Russ & Daughters'],
+        transport:'MetroCard semanal ilimitada',
+        prices:{flight:7800,hotelPerNight:2600,activity:550,foodPerDay:950,transport:3900}
+      },
+      equilibrada:{
+        img:IMG.hotel2, hotel:{name:'Arlo SoHo',desc:'Hotel 4★ de diseño en SoHo · azotea con vista'},
+        flight:{name:'Vuelo directo',desc:'CDMX → JFK · aerolínea tradicional · equipaje incluido'},
+        activities:['SUMMIT One Vanderbilt al atardecer','Broadway (asientos mezzanine)','Chelsea Market y High Line','Museo MoMA','Helicóptero por la Estatua de la Libertad'],
+        restaurants:['Le Bernardin (lunch prix fixe)','L’Artusi (West Village)','Smorgasburg (food hall)'],
+        transport:'Metro + traslados privados aeropuerto',
+        prices:{flight:11200,hotelPerNight:4700,activity:1100,foodPerDay:1600,transport:6800}
+      },
+      premium:{
+        img:IMG.hotel3, hotel:{name:'The Plaza',desc:'Icono neoyorquino 5★ en Fifth Avenue frente a Central Park'},
+        flight:{name:'Business class directo',desc:'CDMX → JFK · Business · lounge y prioridad'},
+        activities:['Broadway con backstage tour','Cena en Per Se (3★ Michelin)','Yate privado alrededor de Manhattan','Compras con personal shopper en Fifth Ave','MoMA antes de la apertura (privado)','Cócteles en el Rainbow Room'],
+        restaurants:['Per Se','Eleven Madison Park','Carbone (reservación privada)'],
+        transport:'SUV Cadillac con chófer',
+        prices:{flight:34000,hotelPerNight:13800,activity:2900,foodPerDay:3600,transport:16800}
+      }
+    }
+  },
+  generico:{
+    name:null, img:IMG.culture,
+    tiers:{
+      economica:{
+        img:IMG.hotel, hotel:{name:'Hotel Ciudad Centro 3★',desc:'Hotel cómodo en zona céntrica, desayuno incluido'},
+        flight:{name:'Vuelo con escala',desc:'Vuelo redondo en aerolínea económica'},
+        activities:['Tour histórico a pie por el centro','Museo principal de la ciudad','Mercado local y barrio antiguo','Mirador panorámico al atardecer'],
+        restaurants:['Restaurante típico de barrio','Mercado gastronómico local','Café histórico de la ciudad'],
+        transport:'Transporte público (pase turístico)',
+        prices:{flight:9200,hotelPerNight:2200,activity:480,foodPerDay:850,transport:3800}
+      },
+      equilibrada:{
+        img:IMG.hotel2, hotel:{name:'Boutique Hotel 4★',desc:'Hotel de diseño con spa y rooftop'},
+        flight:{name:'Vuelo directo',desc:'Vuelo redondo con equipaje incluido'},
+        activities:['Tour guiado privado (medio día)','Museo con acceso prioritario','Excursión de un día a zona vinícola o natural','Clase de cocina local','Tour gastronómico nocturno'],
+        restaurants:['Restaurante con estrella Michelin bib','Bistró de autor','Taberna de mercado'],
+        transport:'Transporte público + traslados al aeropuerto',
+        prices:{flight:13800,hotelPerNight:4000,activity:980,foodPerDay:1450,transport:6800}
+      },
+      premium:{
+        img:IMG.hotel3, hotel:{name:'Palacio de Lujo 5★',desc:'Suite con vista, mayordomo y spa ilimitado'},
+        flight:{name:'Business class',desc:'Vuelo redondo en Business · lounge incluido'},
+        activities:['Tour privado con historiador','Experiencia VIP en museo (fuera de horario)','Helicóptero o velero privado','Cena con chef de estrella Michelin','Sesión fotográfica profesional','Spa y tratamiento de día completo'],
+        restaurants:['Restaurante 3★ Michelin','Cena privada con chef','Bar de hotel insignia'],
+        transport:'Chófer privado todo el viaje',
+        prices:{flight:36000,hotelPerNight:12000,activity:2700,foodPerDay:3500,transport:16000}
+      }
+    }
+  }
+};
+
+const GALLERY = [
+  {key:'paris', name:'París', tag:'Luz, arte y gastronomía', img:IMG.paris},
+  {key:'tokio', name:'Tokio', tag:'Tradición y futuro', img:IMG.tokyo},
+  {key:'nueva york', name:'Nueva York', tag:'La ciudad que nunca duerme', img:IMG.nyc},
+  {key:'generico', name:'¿Otro destino?', tag:'Lo diseñamos para ti', img:IMG.adventure},
+];
+
+const TYPE_IMG = { 'Cultura':IMG.culture,'Gastronomía':IMG.food,'Aventura':IMG.adventure,'Relajación':IMG.relax,'Lujo':IMG.hotel2 };
+
+/* ================= STATE ================= */
+let state = { origin:'Ciudad de México', dest:'París', nights:5, people:3, budget:82375, type:'Cultura', destKey:'paris', plans:[], dates:{start:'2026-11-12',end:'2026-11-17'} };
+
+const fmt = n => new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(n);
+const $ = id => document.getElementById(id);
+
+/* ================= FORM ================= */
+function nightsBetween(a,b){ const d=(new Date(b)-new Date(a))/86400000; return d>0?d:1; }
+function updateNights(){ state.dates={start:$('f-start').value,end:$('f-end').value}; state.nights=nightsBetween(state.dates.start,state.dates.end); $('f-nights').value = state.nights + (state.nights===1?' noche':' noches'); }
+['f-start','f-end'].forEach(id=>$(id).addEventListener('change',updateNights));
+$('f-budget').addEventListener('input',e=>{ $('f-budget-val').textContent = fmt(+e.target.value).replace('MX','').trim(); });
+document.querySelectorAll('#f-type .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#f-type .chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');
+}));
+
+function readForm(){
+  state.origin = $('f-origin').value.trim() || 'Ciudad de México';
+  state.dest = $('f-dest').value.trim() || 'París';
+  state.people = Math.max(1, +$('f-people').value || 1);
+  state.budget = +$('f-budget').value;
+  state.type = document.querySelector('#f-type .chip.active').dataset.type;
+  state.nights = nightsBetween($('f-start').value, $('f-end').value);
+  const low = state.dest.toLowerCase();
+  state.destKey = low.includes('par') ? 'paris' : low.includes('tok') ? 'tokio' : (low.includes('york')||low.includes('new york')) ? 'nueva york' : 'generico';
+}
+function loadDemo(){
+  $('f-origin').value='Ciudad de México'; $('f-dest').value='París';
+  $('f-people').value=3; $('f-start').value='2026-11-12'; $('f-end').value='2026-11-17';
+  $('f-budget').value=82375; $('f-budget-val').textContent='$82,375';
+  document.querySelectorAll('#f-type .chip').forEach(x=>x.classList.toggle('active', x.dataset.type==='Cultura'));
+  updateNights(); planTrip();
+}
+
+/* ================= PLAN BUILD ================= */
+function buildPlans(){
+  const d = DESTINATIONS[state.destKey];
+  const displayName = state.destKey==='generico' ? state.dest : d.name;
+  const typeBoost = {'Aventura':1.04,'Lujo':1.10,'Cultura':1.0,'Gastronomía':1.03,'Relajación':0.97}[state.type];
+  const list = [];
+  ['economica','equilibrada','premium'].forEach((key,i)=>{
+    const t = d.tiers[key];
+    const flight = Math.round(t.prices.flight * state.people * typeBoost /100)*100;
+    const hotel  = Math.round(t.prices.hotelPerNight * state.nights * (state.people>2? Math.ceil(state.people/2):1) * typeBoost /100)*100;
+    const activities = Math.round(t.prices.activity * (3+i) * state.people * state.nights/5 * typeBoost /100)*100;
+    const food = Math.round(t.prices.foodPerDay * state.people * state.nights * typeBoost /100)*100;
+    const transport = t.prices.transport;
+    const total = flight+hotel+activities+food+transport;
+    list.push({ key, ...t, flightCost:flight, hotelCost:hotel, actCost:activities, foodCost:food, transportCost:transport, total });
+  });
+  state.displayName = displayName;
+  state.plans = list;
+}
+
+function planTrip(){
+  readForm(); buildPlans(); renderPlans(); showView('view-plans');
+  toast('✦ ' + state.plans.length + ' propuestas listas para ' + state.displayName);
+}
+
+/* ================= RENDER ================= */
+const icons = {
+  hotel:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6"/></svg>',
+  plane:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5c1.5-1.5 1-3 .5-3.5s-2-.5-3.5.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1Z"/></svg>',
+  act:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+  food:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20M17 2c-1.5 1.5-2 4-2 6 0 2.2.8 3 2 3v11"/></svg>',
+  car:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.3 1 12.1 1 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>'
+};
+
+function renderPlans(){
+  $('plans-title').textContent = 'Tu viaje a ' + state.displayName;
+  $('plans-eyebrow').textContent = 'Tres propuestas · ' + state.type;
+  const s = new Date(state.dates.start).toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+  const e = new Date(state.dates.end).toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+  $('plans-sub').textContent = 'Cada propuesta incluye hotel, vuelos, actividades, restaurantes y transporte — lista para reservar.';
+  $('plans-meta').innerHTML = [
+    state.origin + ' → ' + state.displayName, s + ' – ' + e,
+    state.nights + ' noches', state.people + (state.people===1?' persona':' personas'),
+    'Presupuesto: ' + fmt(state.budget), state.type
+  ].map(t=>'<span class="tag">'+t+'</span>').join('');
+
+  const names = {economica:'Económica', equilibrada:'Equilibrada', premium:'Premium'};
+  const subs = {economica:'Lo esencial, bien hecho', equilibrada:'El favorito de nuestros viajeros', premium:'Sin límites, sin detalles'};
+  $('tier-row').innerHTML = state.plans.map((p,i)=>{
+    const fits = p.total <= state.budget;
+    const badge = p.key==='equilibrada' ? '<span class="badge">Más popular</span>' : '';
+    return `<article class="tier-card ${p.key==='equilibrada'?'featured':''}">
+      ${badge}
+      <div class="tier-img"><img src="${p.img}" alt=""></div>
+      <div class="tier-body">
+        <h3><small>${subs[p.key]}</small>${names[p.key]}</h3>
+        <div class="tier-item">${icons.plane}<div><b>${p.flight.name}</b><span>${p.flight.desc}</span></div></div>
+        <div class="tier-item">${icons.hotel}<div><b>${p.hotel.name}</b><span>${p.hotel.desc}</span></div></div>
+        <div class="tier-item">${icons.act}<div><b>${p.activities.length} actividades</b><span>${p.activities.slice(0,3).join(' · ')}…</span></div></div>
+        <div class="tier-item">${icons.food}<div><b>Restaurantes</b><span>${p.restaurants.join(' · ')}</span></div></div>
+        <div class="tier-item">${icons.car}<div><b>Transporte</b><span>${p.transport}</span></div></div>
+        <div class="tier-price">
+          <div><div class="amount">${fmt(p.total)}</div><div class="per">total estimado · ${state.people} pers.</div>
+          <span class="fits ${fits?'ok':'over'}">${fits ? '✓ Dentro de tu presupuesto' : '+' + fmt(p.total-state.budget) + ' sobre presupuesto'}</span></div>
+          <button class="btn ${p.key==='equilibrada'?'btn-gold':'btn-dark'}" style="padding:.75rem 1.5rem;font-size:.82rem" onclick="openItinerary(${i})">Ver itinerario</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+/* ================= ITINERARY ================= */
+const DAY_THEMES = {
+  economica:['Llegada y primeras impresiones','El corazón de la ciudad','Arte y museos','Barrios con encanto','Despedida con vistas'],
+  equilibrada:['Bienvenida y paseo icónico','Arte e historia','Escapada fuera de lo común','Sabores locales','Último día perfecto'],
+  premium:['Llegada VIP y bienvenida','Experiencias exclusivas','Día de lujo total','Momentos inolvidables','Cierre en grande']
+};
+
+function openItinerary(i){
+  const p = state.plans[i];
+  const names = {economica:'Opción Económica', equilibrada:'Opción Equilibrada', premium:'Opción Premium'};
+  $('itin-eyebrow').textContent = state.displayName + ' · ' + state.nights + ' noches · ' + state.people + ' personas';
+  $('itin-title').textContent = 'Itinerario ' + names[p.key].toLowerCase();
+  $('itin-sub').textContent = p.hotel.name + ' · ' + p.flight.name + ' · ' + p.transport;
+
+  const start = new Date(state.dates.start);
+  let actIdx = 0, restIdx = 0;
+  let html = '';
+  for(let d=0; d<state.nights; d++){
+    const date = new Date(start); date.setDate(start.getDate()+d);
+    const dateStr = date.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+    const acts = p.activities.slice(actIdx, actIdx+ (p.key==='economica'?2:3)); actIdx += acts.length;
+    const rests = p.restaurants.slice(restIdx, restIdx+2); restIdx = (restIdx+2) % p.restaurants.length;
+    const actCost = Math.round(p.actCost/state.nights);
+    const foodCost = Math.round(p.foodCost/state.nights);
+    const stops = [];
+    if(d===0) stops.push(['09:00', p.flight.name + ' — salida', state.origin + ' → ' + state.displayName, Math.round(p.flightCost/state.people)+' pp']);
+    stops.push(['12:00','Check-in y tiempo libre', p.hotel.name, '—']);
+    acts.forEach((a,j)=>stops.push([ (10+j*3)+':00', a, 'Actividad · ' + state.type, fmt(actCost/acts.length)+' pp']));
+    rests.forEach((r,j)=>stops.push([ (14+j*6)+':30', 'Comida: ' + r, 'Restaurante sugerido', fmt(foodCost/2)+' pp']));
+    if(d===state.nights-1){
+      stops.push(['18:00','Check-out y traslado al aeropuerto', p.transport, fmt(Math.round(p.transportCost*0.4))]);
+      stops.push(['21:00', p.flight.name + ' — regreso', state.displayName + ' → ' + state.origin, Math.round(p.flightCost/state.people)+' pp']);
+    } else {
+      stops.push(['20:00','Noche libre o descanso en el hotel','Recomendación del concierge','—']);
+    }
+    const dayTotal = Math.round((p.total - p.transportCost)/state.nights);
+    html += `<div class="day fade-up">
+      <h3><span>Día ${d+1}</span>${DAY_THEMES[p.key][d%DAY_THEMES[p.key].length]}</h3>
+      <p class="muted" style="font-size:.82rem;margin:-.6rem 0 .6rem;text-transform:capitalize">${dateStr}</p>
+      ${stops.map(s=>`<div class="stop"><div class="time">${s[0]}</div><div class="what"><b>${s[1]}</b><span>${s[2]}</span></div><div class="cost">${s[3]}</div></div>`).join('')}
+      <div class="day-total">Costo estimado del día: <b>${fmt(dayTotal)}</b></div>
+    </div>`;
+  }
+  $('itin-days').innerHTML = html;
+
+  // Budget panel
+  $('bud-total').textContent = fmt(p.total);
+  const parts = [['Vuelos',p.flightCost],['Hospedaje',p.hotelCost],['Comida',p.foodCost],['Actividades',p.actCost],['Transporte',p.transportCost]];
+  $('bud-rows').innerHTML = parts.map(([l,v])=>{
+    const pct = Math.round(v/p.total*100);
+    return `<div class="brow"><div class="blabel"><span>${l}</span><span>${fmt(v)} · ${pct}%</span></div><div class="bar"><div class="fill" data-w="${pct}"></div></div></div>`;
+  }).join('');
+  const fits = p.total <= state.budget;
+  $('bud-note').textContent = fits
+    ? '✓ Esta opción cabe en tu presupuesto de ' + fmt(state.budget) + ' con ' + fmt(state.budget - p.total) + ' de margen para souvenirs e imprevistos.'
+    : 'Esta opción supera tu presupuesto por ' + fmt(p.total - state.budget) + '. Considera la opción ' + (i===2?'Equilibrada':'Económica') + ' o aumentar el presupuesto.';
+  showView('view-itin');
+  requestAnimationFrame(()=>{ setTimeout(()=>document.querySelectorAll('.brow .fill').forEach(f=>f.style.width=f.dataset.w+'%'),150); observeFade(); });
+}
+
+/* ================= NAV / VIEWS ================= */
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  observeFade();
+}
+function goHome(e,anchor){
+  if(e) e.preventDefault();
+  showView('view-home');
+  if(anchor) setTimeout(()=>document.getElementById(anchor)?.scrollIntoView({behavior:'smooth'}),60);
+}
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+
+/* ================= GALLERY ================= */
+$('gallery-grid').innerHTML = GALLERY.map(g=>`
+  <div class="g-item fade-up" onclick="pickDest('${g.key}')">
+    <img src="${g.img}" alt="${g.name}">
+    <div class="g-label"><h3>${g.name}</h3><span>${g.tag}</span></div>
+  </div>`).join('');
+
+function pickDest(key){
+  if(key==='generico'){ goHome(event,'planner'); $('f-dest').focus(); return; }
+  const names={paris:'París',tokio:'Tokio','nueva york':'Nueva York'};
+  $('f-dest').value = names[key];
+  planTrip();
+}
+
+/* ================= FX ================= */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.12});
+function observeFade(){ document.querySelectorAll('.fade-up:not(.in)').forEach(el=>io.observe(el)); }
+observeFade();
+
+// init
+updateNights();
+</script>
+</body>
+</html>
